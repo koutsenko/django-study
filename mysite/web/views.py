@@ -1,30 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render, redirect
 
-
-publications_data = {
-    0: {
-        'id': 0,
-        'title': 'About lorem ipsum (RU)',
-        'date': datetime.now(),
-        'text': 'Многие думают, что Lorem Ipsum - взятый с потолка псевдо-латинский набор слов, но это не совсем так. '
-                'Его корни уходят в один фрагмент классической латыни 45 года н.э., то есть более двух тысячелетий '
-                'назад. Ричард МакКлинток, профессор латыни из колледжа Hampden-Sydney, штат Вирджиния, взял одно из '
-                'самых странных слов в Lorem Ipsum, "consectetur", и занялся его поисками в классической латинской '
-                'литературе. В результате он нашёл неоспоримый первоисточник Lorem Ipsum в разделах 1.10.32 и 1.10.33 '
-                'книги "de Finibus Bonorum et Malorum" ("О пределах добра и зла"), написанной Цицероном в 45 году '
-                'н.э. Этот трактат по теории этики был очень популярен в эпоху Возрождения. Первая строка Lorem '
-                'Ipsum, "Lorem ipsum dolor sit amet..", происходит от одной из строк в разделе 1.10.32 '
-    },
-    1: {
-        'id': 1,
-        'title': 'Classic lorem (RU)',
-        'date': datetime.now(),
-        'text': 'Классический текст Lorem Ipsum, используемый с XVI века, приведён ниже. Также даны разделы 1.10.32 и '
-                '1.10.33 "de Finibus Bonorum et Malorum" Цицерона и их английский перевод, сделанный H. Rackham, '
-                '1914 год. '
-    }
-}
+from web.models import Publication
 
 
 def hello(request):
@@ -36,15 +13,17 @@ def contacts(request):
 
 
 def publication(request, pub_id):
-    if pub_id not in publications_data.keys():
+    try:
+        publication = Publication.objects.get(id=pub_id)
+    except Publication.DoesNotExist:
         return redirect('/')
-    else:
-        return render(request, 'publication.html', publications_data[pub_id])
+    return render(request, 'publication.html', {
+        'publication': publication
+    })
 
 
 def publications(request):
-    pubs = publications_data.values()
-    pubs_sorted = sorted(pubs, key=lambda pub: pub['date'], reverse=True)
+    pubs_sorted = Publication.objects.order_by('-date')
 
     return render(request, 'publications.html', {
         'publications': pubs_sorted
@@ -56,16 +35,9 @@ def post(request):
         title = request.POST['title']
         text = request.POST['text']
         if title and text:
-            next_id = len(publications_data.keys())
-            publications_data[next_id] = {
-                'id': next_id,
-                'title': title,
-                'date': datetime.now(),
-                'text': text
-            }
+            Publication.objects.create(title=title, text=text)
             return redirect('/publications/')
         else:
-            # error
             return render(request, 'post.html', {
                 'error': 'Both title and text must not be empty'
             })
