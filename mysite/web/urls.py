@@ -22,4 +22,5 @@ urlpatterns = [
     path('contacts/', views.contacts),
     path('publication/<int:pub_id>/', views.publication),
     path('publications/', views.publications),
+    path('post/', views.post),
 ]

@@ -49,3 +49,25 @@ def publications(request):
     return render(request, 'publications.html', {
         'publications': pubs_sorted
     })
+
+
+def post(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        text = request.POST['text']
+        if title and text:
+            next_id = len(publications_data.keys())
+            publications_data[next_id] = {
+                'id': next_id,
+                'title': title,
+                'date': datetime.now(),
+                'text': text
+            }
+            return redirect('/publications/')
+        else:
+            # error
+            return render(request, 'post.html', {
+                'error': 'Both title and text must not be empty'
+            })
+
+    return render(request, 'post.html')
