@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 publications_data = {
@@ -35,5 +35,8 @@ def contacts(request):
     return render(request, 'contacts.html')
 
 
-def publication(request):
-    return render(request, 'publication.html', publications_data[0])
+def publication(request, pub_id):
+    if pub_id not in publications_data.keys():
+        return redirect('/')
+    else:
+        return render(request, 'publication.html', publications_data[pub_id])
