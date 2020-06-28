@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Main</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Main{% endblock %}
+
+{% block content %}
     <h1>Hello everyone!</h1>
     <span>Hello world! Also, you can go to <a href="/contacts/">contacts</a> now.</span>
-</body>
-</html>
+{% endblock %}
