@@ -28,6 +28,7 @@ SECRET_KEY = secrets.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['8eadce7189e2.ngrok.io']
 ALLOWED_HOSTS = []
 
 
