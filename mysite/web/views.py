@@ -40,3 +40,12 @@ def publication(request, pub_id):
         return redirect('/')
     else:
         return render(request, 'publication.html', publications_data[pub_id])
+
+
+def publications(request):
+    pubs = publications_data.values()
+    pubs_sorted = sorted(pubs, key=lambda pub: pub['date'], reverse=True)
+
+    return render(request, 'publications.html', {
+        'publications': pubs_sorted
+    })
